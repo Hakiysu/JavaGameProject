@@ -1,4 +1,5 @@
 import cn.itwanho.eliminate.Element;
+import cn.itwanho.eliminate.*;
 
 import javax.swing.*;
 
@@ -18,27 +19,28 @@ public class World extends JPanel {
     public Element[][] elements = new Element[ROWS][COLS];
 
     //insert animal element into Element array,using for loop
-    for(int i = 0; i < ROWS; i++){
-        for(int j = 0; j < COLS; j++){
-            //generate random number from 0 to 3
-            int random = (int) (Math.random() * 4);
-            switch (random){
-                case 0:
-                    elements[i][j] = new Fox(i, j);
-                    break;
-                case 1:
-                    elements[i][j] = new Frog(i, j);
-                    break;
-                case 2:
-                    elements[i][j] = new Bear(i, j);
-                    break;
-                case 3:
-                    elements[i][j] = new Bird(i, j);
-                    break;
+    public void importElements() {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                //generate random number from 0 to 3
+                int random = (int) (Math.random() * 4);
+                switch (random) {
+                    case 0:
+                        elements[i][j] = new Fox(i, j);
+                        break;
+                    case 1:
+                        elements[i][j] = new Frog(i, j);
+                        break;
+                    case 2:
+                        elements[i][j] = new Bear(i, j);
+                        break;
+                    case 3:
+                        elements[i][j] = new Bird(i, j);
+                        break;
+                }
             }
         }
     }
-
 
     public static void main(String[] args) {
         JFrame frame = new JFrame();
