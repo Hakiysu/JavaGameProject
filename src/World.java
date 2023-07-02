@@ -1,4 +1,5 @@
-import cn.itwanho.eliminate.*;
+import cn.itwanho.eliminate.Element;
+import cn.itwanho.eliminate.Images;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,8 +10,8 @@ public class World extends JPanel {
     public static final int WIDTH = 429;
     public static final int HEIGHT = 570;
     //game window row and column
-    public static final int ROWS = 8;
-    public static final int COLS = 6;
+    public static final int ROWS = 6;
+    public static final int COLS = 8;
     //animal size
     public static final int ANIMAL_SIZE = 60;
     //offset of game window
@@ -64,5 +65,12 @@ public class World extends JPanel {
                 );
             }
         }
+    }
+
+    //get mouse click position,return the row and column of the element
+    public Element getAnimal(int x, int y) {
+        int col = (x - OFFSET) / ANIMAL_SIZE;
+        int row = (y - OFFSET) / ANIMAL_SIZE;
+        return elements[row][col];
     }
 }
