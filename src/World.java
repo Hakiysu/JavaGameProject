@@ -3,6 +3,7 @@ import cn.itwanho.eliminate.Images;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 //window class
 public class World extends JPanel {
@@ -30,6 +31,22 @@ public class World extends JPanel {
         frame.setSize(WIDTH, HEIGHT + 17);//17是窗口标题栏的高度
         frame.setLocationRelativeTo(null);//使窗口显示在屏幕中央
         frame.setVisible(true);//自动调用paint()方法
+        //start game
+        world.startGameLoop();
+    }
+
+    private void startGameLoop() {
+        // TODO Auto-generated method stub
+        while (true) {
+            //repaint the game window
+            repaint();
+            try {
+                Thread.sleep(1000 / 60);//60帧
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
     //insert animal element into Element array,using for loop
@@ -67,10 +84,14 @@ public class World extends JPanel {
         }
     }
 
-    //get mouse click position,return the row and column of the element
-    public Element getAnimal(int x, int y) {
-        int col = (x - OFFSET) / ANIMAL_SIZE;
-        int row = (y - OFFSET) / ANIMAL_SIZE;
-        return elements[row][col];
+    //get position by listening mouse click event,then return the position:x,y
+    public int[] getPosition(MouseEvent e) {
+        int[] position = new int[2];
+        position[0] = (e.getY() - OFFSET) / ANIMAL_SIZE;
+        position[1] = (e.getX() - OFFSET) / ANIMAL_SIZE;
+        System.out.println("row:" + position[0] + " col:" + position[1]);
+        return position;
     }
+
+
 }
