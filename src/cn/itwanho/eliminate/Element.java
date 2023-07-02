@@ -1,5 +1,8 @@
 package cn.itwanho.eliminate;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class Element {
     //position of the element
     private int x;
@@ -12,12 +15,27 @@ public class Element {
     //anime is 4 pictures,save in a array
     //start from 0,then play 1,2,3,then stop
     private int boomAnimeIndexForElement;
+    //image
+    private ImageIcon image;
 
-    public Element(int x, int y) {
+    public Element(int x, int y,ImageIcon image) {
         this.x = x;
         this.y = y;
         this.selected = false;
         this.eliminated = false;
         this.boomAnimeIndexForElement = 0;
+        this.image = image;
+    }
+
+    public int getCol() {
+        return x;
+    }
+
+    public int getRow() {
+        return y;
+    }
+
+    public ImageIcon getImage() {
+        return image;
     }
 }
