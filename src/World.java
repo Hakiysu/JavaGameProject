@@ -1,5 +1,6 @@
 import cn.itwanho.eliminate.Element;
 import cn.itwanho.eliminate.Images;
+import cn.itwanho.eliminate.MusicPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +32,7 @@ public class World extends JPanel {
     public Element[][] elements = new Element[ROWS_ELEMENT][COLS_ELEMENT];
     //eliminate stack
     public Stack<Element> eliminateStack = new Stack<Element>();
+    private cn.itwanho.eliminate.MusicPlayer MusicPlayer;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame();
@@ -44,6 +46,8 @@ public class World extends JPanel {
         frame.setLocationRelativeTo(null);//使窗口显示在屏幕中央
         frame.setVisible(true);//自动调用paint()方法
         //start game
+        world.MusicPlayer=new MusicPlayer();
+        world.MusicPlayer.playBackgroundMusic();
         world.startGameLoop();
     }
 
