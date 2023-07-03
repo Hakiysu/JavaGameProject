@@ -96,6 +96,4 @@ public class World extends JPanel {
         System.out.println("row:" + position[0] + " col:" + position[1]);
         return position;
     }
-
-
 }

@@ -21,6 +21,26 @@ public class MusicPlayer {
             e.printStackTrace();
         }
     }
+    private void playOnce(String filePath){
+                try {
+            File audioFile = new File(filePath);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+            AudioFormat format = audioStream.getFormat();
+            DataLine.Info info = new DataLine.Info(Clip.class, format);
+            clip = (Clip) AudioSystem.getLine(info);
+
+            clip.addLineListener(event -> {
+                if (event.getType() == LineEvent.Type.STOP) {
+                    stopMusic();
+                }
+            });
+
+            clip.open(audioStream);
+            clip.start();
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void stopMusic() {
         if (clip != null && clip.isRunning()) {
@@ -43,6 +63,30 @@ public class MusicPlayer {
     }
     public void playMainMusic() {
         playMusic("assets/music/main.wav");
+    }
+    public void playSwapMusic() {
+        playOnce("assets/music/swap.wav");
+    }
+    public void playEliminateMusic() {
+        playOnce("assets/music/eliminate.wav");
+    }
+    public void playDropMusic() {
+        playOnce("assets/music/drop.wav");
+    }
+    public void playGoodMusic() {
+        playOnce("assets/music/good.wav");
+    }
+    public void playGreatMusic() {
+        playOnce("assets/music/bad.wav");
+    }
+    public void playAmazingMusic() {
+        playOnce("assets/music/amazing.wav");
+    }
+    public void playExcellentMusic() {
+        playOnce("assets/music/excellent.wav");
+    }
+    public void playUnbelievableMusic() {
+        playOnce("assets/music/unbelievable.wav");
     }
 }
 
