@@ -21,6 +21,7 @@ public class MusicPlayer {
             e.printStackTrace();
         }
     }
+    //this func plays music only once
     private void playOnce(String filePath){
                 try {
             File audioFile = new File(filePath);
@@ -58,6 +59,7 @@ public class MusicPlayer {
             clip.start();
         }
     }
+
     public void playBackgroundMusic() {
         playMusic("assets/music/bg.wav");
     }
