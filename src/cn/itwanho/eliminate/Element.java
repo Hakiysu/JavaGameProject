@@ -1,7 +1,6 @@
 package cn.itwanho.eliminate;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Element {
     //position of the element
@@ -17,25 +16,67 @@ public class Element {
     private int boomAnimeIndexForElement;
     //image
     private ImageIcon image;
+    //name
+    private String name;
 
-    public Element(int x, int y,ImageIcon image) {
+    public Element(int x, int y, ImageIcon image,String name) {
         this.x = x;
         this.y = y;
         this.selected = false;
         this.eliminated = false;
         this.boomAnimeIndexForElement = 0;
         this.image = image;
+        this.name = name;
     }
 
     public int getCol() {
         return x;
     }
 
+    public void setCol(int i) {
+        this.x = i;
+    }
+
     public int getRow() {
         return y;
     }
 
+    public void setRow(int i) {
+        this.y = i;
+    }
+
     public ImageIcon getImage() {
         return image;
+    }
+
+    public void setImage(ImageIcon bomb) {
+        this.image = bomb;
+    }
+
+    public boolean isEliminated() {
+        return eliminated;
+    }
+
+    public int getBoomAnimeIndexForElement() {
+        return boomAnimeIndexForElement;
+    }
+
+    public void setBoomAnimeIndexForElement(int i) {
+        this.boomAnimeIndexForElement = i;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean b) {
+        this.selected = b;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getName(){
+        return name;
     }
 }

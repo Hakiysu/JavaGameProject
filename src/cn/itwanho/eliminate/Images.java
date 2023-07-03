@@ -21,18 +21,4 @@ public class Images {
             bombs[i] = new ImageIcon("assets/img/bom" + (i + 1) + ".png");
         }
     }
-
-    public static void main(String[] args) {
-        //for test pictures
-        //print 8 means the picture is loaded successfully
-        System.out.println(background.getImageLoadStatus());
-        System.out.println(fox.getImageLoadStatus());
-        System.out.println(frog.getImageLoadStatus());
-        System.out.println(bear.getImageLoadStatus());
-        System.out.println(bird.getImageLoadStatus());
-        for (int i = 0; i < bombs.length; i++) {
-            System.out.println(bombs[i].getImageLoadStatus());
-        }
-
-    }
 }
