@@ -1,5 +1,6 @@
 import cn.itwanho.eliminate.Element;
 import cn.itwanho.eliminate.Images;
+import cn.itwanho.eliminate.MusicPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +20,7 @@ public class World extends JPanel {
     public static final int OFFSET = 30;
     //claim the game element,any elements will be stored in this array
     public Element[][] elements = new Element[ROWS][COLS];
+    private cn.itwanho.eliminate.MusicPlayer MusicPlayer;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame();
@@ -31,6 +33,8 @@ public class World extends JPanel {
         frame.setSize(WIDTH, HEIGHT + 17);//17是窗口标题栏的高度
         frame.setLocationRelativeTo(null);//使窗口显示在屏幕中央
         frame.setVisible(true);//自动调用paint()方法
+        world.MusicPlayer = new MusicPlayer();
+        world.MusicPlayer.playBackgroundMusic();
         //start game
         world.startGameLoop();
     }
