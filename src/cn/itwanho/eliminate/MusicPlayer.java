@@ -49,16 +49,6 @@ public class MusicPlayer {
             clip.close();
         }
     }
-    public void pauseMusic() {
-        if (clip != null && clip.isRunning()) {
-            clip.stop();
-        }
-    }
-    public void resumeMusic() {
-        if (clip != null && !clip.isRunning()) {
-            clip.start();
-        }
-    }
 
     public void playBackgroundMusic() {
         playMusic("assets/music/bg.wav");
