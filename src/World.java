@@ -17,9 +17,8 @@ public class World extends JPanel {
     public static final int WIDTH = 429;
     public static final int HEIGHT = 570;
     //game window row and column
-
-    public static final int ROWS = 8;
-    public static final int COLS = 6;
+    public static final int ROWS = 8;//game have 8 rows
+    public static final int COLS = 6;//game have 6 columns
     //each row have 6 elements
     //each column have 8 elements
     public static final int ROWS_ELEMENT = 6;
@@ -30,7 +29,7 @@ public class World extends JPanel {
     public static final int OFFSET = 30;
     //claim the game element,any elements will be stored in this array
     public Element[][] elements = new Element[ROWS_ELEMENT][COLS_ELEMENT];
-    //eliminate stack
+    //eliminate stack,size is row*col
     public Stack<Element> eliminateStack = new Stack<Element>();
     private cn.itwanho.eliminate.MusicPlayer MusicPlayer;
 
@@ -57,7 +56,7 @@ public class World extends JPanel {
             //repaint the game window
             repaint();
             try {
-                Thread.sleep(1000 / 1);//FPS
+                Thread.sleep(1000);//FPS
                 //create a thread to get mouse click
                 new Thread(() -> {
                     // TODO Auto-generated method stub
@@ -97,7 +96,7 @@ public class World extends JPanel {
                                 int[] position1 = {element1.getRow(), element1.getCol()};
                                 int[] position2 = {element2.getRow(), element2.getCol()};
                                 //print position and name of two elements in one line
-                                System.out.println("element1: " + element1.getName() + " " + element1.getCol() + " " + element1.getRow()+"|element2: " + element2.getName() + " " + element2.getCol() + " " + element2.getRow());
+                                System.out.println("element1: " + element1.getName() + " " + element1.getCol() + " " + element1.getRow() + "|element2: " + element2.getName() + " " + element2.getCol() + " " + element2.getRow());
                                 //if two elements are neighbor,swap them
                                 if (checkAdjacent(position1, position2)) {
                                     //swap two elements
@@ -107,13 +106,15 @@ public class World extends JPanel {
                                     //unselect two elements
                                     element1.setSelected(false);
                                     element2.setSelected(false);
-                                    System.out.println("Adjacent");
+                                    System.out.println("Adjacent!");
                                 } else {
                                     //if two elements are not neighbor,unselect them
                                     element1.setSelected(false);
                                     element2.setSelected(false);
                                     //play swap anime
                                     playSwapAnime(element1, element2);
+                                    //repaint the game window
+                                    repaint();
                                 }
                             }
 
@@ -135,9 +136,10 @@ public class World extends JPanel {
             }
         }
         //make sure there is no eliminate element when game start
+        /*
         while (checkEliminate()) {
             generateRandomGameArray();
-        }
+        }*/
 
     }
 
@@ -235,33 +237,72 @@ public class World extends JPanel {
             for (int j = 1; j < COLS_ELEMENT; j++) {
                 //if the element is the same as the top element in stack,push it into stack
                 //same rule:check name of two elements
-                
-            }
-            //check the size of stack
-            //if the size of stack is less than 3,clear the stack
-            if (eliminateStack.size() < 3) {
-                eliminateStack.clear();
-            } else {
-                //if the size of stack is more than 3,there are elements can be eliminated
-                flag = true;
-                //clear the stack
-                eliminateStack.clear();
-            }
-        }
+                //if any element is not the same as the top element in stack,check the size of stack
+                //if the size of stack is less than 3,clear the stack
+                //if the size of stack is more than 3,eliminate elements in stack
+                if (elements[i][j].getName().equals(eliminateStack.peek().getName())) {
+                    eliminateStack.push(elements[i][j]);
+                } else {
+                    if (eliminateStack.size() < 3) {
+                        eliminateStack.clear();
+                        eliminateStack.push(elements[i][j]);
+                    } else {
+                        flag = true;
+                        break;
+                    }
+                }
 
-        //print the elements can be eliminated
-        System.out.println("Eliminate elements:");
-        for (Element element : eliminateStack) {
-            System.out.println(element.getName());
+            }
+            //if the size of stack is more than 3,eliminate elements in stack
+            if (eliminateStack.size() >= 3) {
+                flag = true;
+                break;
+            } else {
+                eliminateStack.clear();
+            }
+
+
+        }
+        //check by column
+        for (int j = 0; j < COLS_ELEMENT; j++) {
+            //use stack to store the elements can be eliminated
+            //push the first element into stack
+            eliminateStack.push(elements[0][j]);
+            for (int i = 1; i < ROWS_ELEMENT; i++) {
+                //if the element is the same as the top element in stack,push it into stack
+                //same rule:check name of two elements
+                //if any element is not the same as the top element in stack,check the size of stack
+                //if the size of stack is less than 3,clear the stack
+                //if the size of stack is more than 3,eliminate elements in stack
+                if (elements[i][j].getName().equals(eliminateStack.peek().getName())) {
+                    eliminateStack.push(elements[i][j]);
+                } else {
+                    if (eliminateStack.size() < 3) {
+                        eliminateStack.clear();
+                        eliminateStack.push(elements[i][j]);
+                    } else {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            //if the size of stack is more than 3,eliminate elements in stack
+            if (eliminateStack.size() >= 3) {
+                flag = true;
+                break;
+            } else {
+                eliminateStack.clear();
+            }
         }
         return flag;
     }
+
     //drop elements after eliminate
     //if there are empty elements,drop the elements above them
     //generate random elements to fill the empty elements
     public void dropElements() {
         //drop elements by column
-        Stack<Element> dropStack= new Stack<>();
+        Stack<Element> dropStack = new Stack<>();
         for (int j = 0; j < COLS_ELEMENT; j++) {
             //use stack to store the elements in a column
             for (int i = 0; i < ROWS_ELEMENT; i++) {
