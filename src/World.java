@@ -304,7 +304,6 @@ public class World extends JPanel {
                     Element element = createElement(row, col);
                     elements[row][col] = element;   //将元素填充到 elements数组中
                 } while (checkEliminate(row, col) != ELIMINATE_NONE);  //若可消则重新生成元素
-
             }
         }
     }
