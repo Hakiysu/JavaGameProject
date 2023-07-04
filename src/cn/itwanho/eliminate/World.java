@@ -30,9 +30,7 @@ public class World extends JPanel {
     public static final int ELIMINATE_NONE = 0; //元素不可消
     public static final int ELIMINATE_ROW = 1; //元素行可消
     public static final int ELIMINATE_COL = 2; //元素列可消
-    //claim the game element,any elements will be stored in this array
     public Element[][] elements = new Element[ROWS_ELEMENT][COLS_ELEMENT];
-    //eliminate stack,size is row_e*col_e
     public Stack<Element> eliminateStack = new Stack<>();
     private cn.itwanho.eliminate.MusicPlayer MusicPlayer;
     private int firstRow = 0; //第一个选中的元素的ROW
@@ -141,9 +139,9 @@ public class World extends JPanel {
     //print the game window
     public void paint(Graphics g) {
         Images.background.paintIcon(null, g, 0, 0);
-        for (int row = 0; row < ROWS_ELEMENT; row++) {
-            for (int col = 0; col < COLS_ELEMENT; col++) {
-                Element element = elements[row][col];
+        for (int y = 0; y < COLS_ELEMENT; y++) {
+            for (int x = 0; x < ROWS_ELEMENT; x++) {
+                Element element = elements[x][y];
                 if (element != null) {
                     element.paintElement(g);
                 }
@@ -179,12 +177,12 @@ public class World extends JPanel {
     }
 
     //检查消除
-    public int checkEliminate(int row, int col) {
-        Element element = elements[row][col];   //获取当前元素
+    public int checkEliminate(int x, int y) {
+        Element element = elements[x][y];   //获取当前元素
         //判断纵向
-        if (row >= 2) {
-            Element element1 = elements[row - 1][col];  //获取当前元素上面第1个元素
-            Element element2 = elements[row - 2][col];  //获取当前元素上面第2个元素
+        if (x >= 2) {
+            Element element1 = elements[x - 1][y];  //获取当前元素上面第1个元素
+            Element element2 = elements[x - 2][y];  //获取当前元素上面第2个元素
             if (element1 != null && element2 != null && element != null) {
                 //若元素都不为null
                 if (element.getClass().equals(element1.getClass()) && element.getClass().equals(element2.getClass())) {
@@ -194,9 +192,9 @@ public class World extends JPanel {
         }
 
         //判断横向
-        if (col >= 2) {
-            Element element1 = elements[row][col - 1];  //获取当前元素前面第1个元素
-            Element element2 = elements[row][col - 2];  //获取当前元素前面第2个元素
+        if (y >= 2) {
+            Element element1 = elements[x][y - 1];  //获取当前元素前面第1个元素
+            Element element2 = elements[x][y - 2];  //获取当前元素前面第2个元素
             if (element1 != null && element2 != null && element != null) {
                 //若元素都不为null
                 if (element.getClass().equals(element1.getClass()) && element.getClass().equals(element2.getClass())) {
@@ -222,13 +220,13 @@ public class World extends JPanel {
     }
 
     public void fillAllElement() {
-        for (int col = 0; col < COLS_ELEMENT; col++) {
-            for (int row = 0; row < ROWS_ELEMENT; row++) {
+        for (int y = 0; y < COLS_ELEMENT; y++) {
+            for (int x = 0; x < ROWS_ELEMENT; x++) {
                 //判断行消列消
                 do {
-                    Element element = createElement(row, col);
-                    elements[row][col] = element;   //将元素填充到 elements数组中
-                } while (checkEliminate(row, col) != ELIMINATE_NONE);  //若可消则重新生成元素
+                    Element element = createElement(x, y);
+                    elements[x][y] = element;   //将元素填充到 elements数组中
+                } while (checkEliminate(x, y) != ELIMINATE_NONE);  //若可消则重新生成元素
             }
         }
     }
