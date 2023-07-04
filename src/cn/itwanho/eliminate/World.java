@@ -140,6 +140,8 @@ public class World extends JPanel {
         Element element2 = elements[secondRow][secondCol];
         elements[firstRow][firstCol] = element2;
         elements[secondRow][secondCol] = element1;
+        MusicPlayer mmp = new MusicPlayer();
+        mmp.playSwapMusic();
     }
 
     //检查消除
@@ -325,6 +327,8 @@ public class World extends JPanel {
                 }
             }
         }
+        MusicPlayer mmp = new MusicPlayer();
+        mmp.playGoodMusic();
         return haveEliminated;
     }
 
@@ -368,6 +372,8 @@ public class World extends JPanel {
                         }
                         //生成新元素
                         elements[0][nullCol] = createElement(0, nullCol);
+                        MusicPlayer mmp = new MusicPlayer();
+                        mmp.playDropMusic();
                     }
                 } else {
                     break;

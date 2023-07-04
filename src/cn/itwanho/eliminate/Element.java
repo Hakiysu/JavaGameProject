@@ -81,11 +81,13 @@ public abstract class Element {
             g.setColor(Color.GREEN);
             g.fillRect(x, y, World.ANIMAL_SIZE, World.ANIMAL_SIZE);
             this.getImage().paintIcon(null, g, this.x, this.y);
-
         } else if (getEliminated()) {
             //若没到最后一张爆炸图
             if (boomAnimeIndexForElement < Images.bombs.length) {
                 Images.bombs[boomAnimeIndexForElement++].paintIcon(null, g, x, y);
+            } else {
+                MusicPlayer mmp = new MusicPlayer();//multiple music player instances
+                mmp.playEliminateMusic();
             }
 
         } else {
