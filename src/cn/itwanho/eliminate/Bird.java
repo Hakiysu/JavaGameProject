@@ -4,7 +4,11 @@ import javax.swing.*;
 
 public class Bird extends Element {
 
-    public Bird(int x, int y, ImageIcon image, String name) {
-        super(x, y, image, name);
+    public Bird(int x, int y) {
+        super(x, y);
+    }
+
+    public ImageIcon getImage() {
+        return Images.bird;
     }
 }

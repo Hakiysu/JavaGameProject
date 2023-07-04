@@ -1,12 +1,12 @@
-import cn.itwanho.eliminate.Element;
-import cn.itwanho.eliminate.Images;
-import cn.itwanho.eliminate.MusicPlayer;
+import cn.itwanho.eliminate.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Random;
 import java.util.Stack;
+import java.util.Arrays;
 
 import static cn.itwanho.eliminate.AnimeDraw.playBoomAnime;
 import static cn.itwanho.eliminate.AnimeDraw.playSwapAnime;
@@ -32,6 +32,18 @@ public class World extends JPanel {
     //eliminate stack,size is row_e*col_e
     public Stack<Element> eliminateStack = new Stack<>();
     private cn.itwanho.eliminate.MusicPlayer MusicPlayer;
+    public static final int ELEMENT_TYPE_BEAR = 0;  //熊
+    public static final int ELEMENT_TYPE_BIRD = 1;  //鸟
+    public static final int ELEMENT_TYPE_FOX = 2;  //狐狸
+    public static final int ELEMENT_TYPE_FROG = 3;  //青蛙
+
+    public static final int ELIMINATE_NONE = 0; //元素不可消
+    public static final int ELIMINATE_ROW = 1; //元素行可消
+    public static final int ELIMINATE_COL = 2; //元素列可消
+    private int firstRow = 0; //第一个选中的元素的ROW
+    private int firstCol = 0; //第一个选中的元素的COL
+    private int secondRow = 0; //第二个选中的元素的ROW
+    private int secondCol = 0; //第二个选中的元素的COL
 
     public static void main(String[] args) {
         JFrame frame = new JFrame();
@@ -46,13 +58,12 @@ public class World extends JPanel {
         frame.setLocationRelativeTo(null);//使窗口显示在屏幕中央
         frame.setVisible(true);//自动调用paint()方法
         //start game
-        world.MusicPlayer=new MusicPlayer();
+        world.MusicPlayer = new MusicPlayer();
         world.MusicPlayer.playBackgroundMusic();
         world.startGameLoop();
     }
 
     private void startGameLoop() {
-        // TODO Auto-generated method stub
         while (true) {
             //repaint the game window
             repaint();
@@ -60,12 +71,10 @@ public class World extends JPanel {
                 Thread.sleep(1000);//FPS
                 //create a thread to get mouse click
                 new Thread(() -> {
-                    // TODO Auto-generated method stub
                     //get mouse click event
                     addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            // TODO Auto-generated method stub
                             //get the position of mouse click
                             int[] position = getMouseClickPositionInArray(e);
                             //get the element by position
@@ -91,8 +100,8 @@ public class World extends JPanel {
                                 }
                             }
                             //destroy element
-                            element=null;
-                            System.out.println("element"+element);
+                            element = null;
+                            System.out.println("element" + Arrays.deepToString(elements));
                             //check between two elements
                             if (count == 2) {
                                 System.out.println("Do check adjacent");
@@ -120,7 +129,6 @@ public class World extends JPanel {
                     });
                 }).start();
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -128,16 +136,7 @@ public class World extends JPanel {
 
     //insert animal element into Element array,using for loop
     public void generateRandomGameArray() {
-        for (int i = 0; i < ROWS_ELEMENT; i++) {
-            for (int j = 0; j < COLS_ELEMENT; j++) {
-                getRandomElement(i, j);
-            }
-        }
-        //make sure there is no eliminate element when game start
-        while (checkEliminate()) {
-            generateRandomGameArray();
-        }
-
+        fillAllElement();
     }
 
     //print the game window
@@ -176,148 +175,137 @@ public class World extends JPanel {
     //Process:check if two elements are adjacent
     //Output:boolean,if two elements are adjacent,return true,else return false
     public boolean checkAdjacent(Element element1, Element element2) {
-        //check if two elements are adjacent
-        //if two elements are adjacent,return true
-        //if two elements are not adjacent,return false
-
-        //check if two elements are in the same row
-        if (element1.getRow() == element2.getRow()) {
-            //check if two elements are adjacent
-            if (element1.getCol() == element2.getCol() - 1 || element1.getCol() == element2.getCol() + 1) {
-                return true;
-            }
-        }
-        //check if two elements are in the same column
-        if (element1.getCol() == element2.getCol()) {
-            //check if two elements are adjacent
-            if (element1.getRow() == element2.getRow() - 1 || element1.getRow() == element2.getRow() + 1) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    //swap two elements,then check is there any element can eliminate first
-    //if there is no element can be eliminated,swap two elements back
-    //if there is element can be eliminated,swap two elements and eliminate them,play bomb anime
-    //do not need to check if two elements are adjacent,because it has been checked before
-    public void swapElements(Element element1, Element element2) {
-        //swap two elements
-        Element temp = elements[element1.getRow()][element1.getCol()];
-        elements[element1.getRow()][element1.getCol()] = elements[element2.getRow()][element2.getCol()];
-        elements[element2.getRow()][element2.getCol()] = temp;
-        //check if there are elements can be eliminated
-        if (checkEliminate()) {
-            //if there are elements can be eliminated,eliminate them
-            eliminateElements();
-            //after eliminate elements,check if there are elements can be eliminated again
-            //if there are elements can be eliminated,eliminate them
-            while (checkEliminate()) {
-                System.out.println("Eliminate again");
-                eliminateElements();
-                //if no elements can be eliminated,stop while loop
-            }
+        firstRow = element1.getRow();
+        firstCol = element1.getCol();
+        secondRow = element2.getRow();
+        secondCol = element2.getCol();
+        //若行相邻且列相等  或 列相邻且行相等
+        if ((Math.abs(firstRow - secondRow) == 1 && firstCol == secondCol) || (Math.abs(firstCol - secondCol) == 1 && firstRow == secondRow)) {
+            return true;    //相邻
         } else {
-            //if there are no elements can be eliminated,swap two elements back
-            temp = elements[element1.getRow()][element1.getCol()];
-            elements[element1.getRow()][element1.getCol()] = elements[element2.getRow()][element2.getCol()];
-            elements[element2.getRow()][element2.getCol()] = temp;
+            return false;    //不相邻
         }
     }
 
-    //read eliminate elements from stack,then set the image of element to null
-    private void eliminateElements() {
-        //read eliminate elements from stack
-        while (!eliminateStack.isEmpty()) {
-            Element element = eliminateStack.pop();
-            //play boom anime
-            playBoomAnime(element);
-            //set the image of element to null
-            elements[element.getRow()][element.getCol()].setImage(null);
-        }
+
+    //交换元素
+    private void swapElements(Element element1, Element element2) {
+        elements[firstRow][firstCol] = element2;
+        elements[secondRow][secondCol] = element1;
     }
 
-    //check element can be eliminated or not
-    //rule:3 or more same animal in a row or column can be eliminated
-    //use stack to store the elements can be eliminated
-    public boolean checkEliminate() {
-        //check if there are elements can be eliminated
-        boolean flag = false;
-        //check by row
-        for (int i = 0; i < ROWS; i++) {
-            //use stack to store the elements can be eliminated
-            //push the first element into stack
-            eliminateStack.push(elements[0][i]);//start at (0,0),then check by row,such as (0,1),(0,2),(0,3)...(0,7)
-            for (int j = 1; j < COLS; j++) {
-                //if the element is the same as the top element in stack,push it into stack
-                //same rule:check name of two elements
-                //if any element is not the same as the top element in stack,check the size of stack
-                //if the size of stack is less than 3,clear the stack
-                //if the size of stack is more than 3,eliminate elements in stack
-                if (elements[j][i].getName().equals(eliminateStack.peek().getName())) {
-                    eliminateStack.push(elements[j][i]);
-                } else {
-                    if (eliminateStack.size() < 3) {
-                        eliminateStack.clear();
-                        eliminateStack.push(elements[i][j]);
-                    } else {
-                        flag = true;
-                        break;
-                    }
+    //检查消除
+    public int checkEliminate(int row, int col) {
+        Element element = elements[row][col];   //获取当前元素
+        //判断纵向
+        if (row >= 2) {
+            Element element1 = elements[row - 1][col];  //获取当前元素上面第1个元素
+            Element element2 = elements[row - 2][col];  //获取当前元素上面第2个元素
+            if (element1 != null && element2 != null && element != null) {
+                //若元素都不为null
+                if (element.getClass().equals(element1.getClass()) && element.getClass().equals(element2.getClass())) {
+                    return ELIMINATE_COL; //表示列可消除
                 }
             }
-            //if the size of stack is more than 3,eliminate elements in stack
-            if (eliminateStack.size() >= 3) {
-                flag = true;
-                break;
-            } else {
-                eliminateStack.clear();
+        }
+
+        //判断横向
+        if (col >= 2) {
+            Element element1 = elements[row][col - 1];  //获取当前元素前面第1个元素
+            Element element2 = elements[row][col - 2];  //获取当前元素前面第2个元素
+            if (element1 != null && element2 != null && element != null) {
+                //若元素都不为null
+                if (element.getClass().equals(element1.getClass()) && element.getClass().equals(element2.getClass())) {
+                    return ELIMINATE_ROW; //表示行可消除
+                }
             }
         }
 
-        return flag;
+        return ELIMINATE_NONE;  //表示不能消除
     }
 
     //drop elements after eliminate
     //if there are empty elements,drop the elements above them
     //generate random elements to fill the empty elements
-    public void dropElements() {
-        //drop elements by column
-        Stack<Element> dropStack = new Stack<>();
-        for (int j = 0; j < COLS_ELEMENT; j++) {
-            //use stack to store the elements in a column
-            for (int i = 0; i < ROWS_ELEMENT; i++) {
-                //if the element is not null,push it into stack
-                if (elements[i][j].getImage() != null) {
-                    dropStack.push(elements[i][j]);
+    private void dropElements() {
+        for (int row = ROWS - 1; row >= 0; row--) {
+            //只要有null 元素就将它上面的元素落下
+            while (true) {
+                int[] nullCols = {};    //当前行为null的列号
+
+                for (int col = COLS - 1; col >= 0; col--) {
+                    Element element = elements[row][col];
+                    if (element == null) {
+                        nullCols = Arrays.copyOf(nullCols, nullCols.length + 1);
+                        nullCols[nullCols.length - 1] = col;
+                    }
                 }
-            }
-            //drop elements
-            for (int i = 0; i < ROWS_ELEMENT; i++) {
-                //if the stack is not empty,drop the element
-                if (!dropStack.isEmpty()) {
-                    elements[i][j] = dropStack.pop();
-                    elements[i][j].setRow(i);
-                    elements[i][j].setCol(j);
+
+                //查找null 列
+                if (nullCols.length > 0) {
+                    //移动下落元素
+                    for (int count = 0; count < 15; count++) {
+                        // 向下落一下
+                        for (int nullCol : nullCols) {
+                            for (int dr = row - 1; dr >= 0; dr--) {
+                                Element element = elements[dr][nullCol];
+                                if (element != null) {
+                                    element.setRow(element.getRow() + 1);
+                                    element.setCol(nullCol);
+                                }
+                            }
+                        }
+
+
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        repaint();
+                    }
+
+                    //真正让数组上面的元素向下移动
+                    for (int nullCol : nullCols) {
+                        for (int nr = row; nr > 0; nr--) {
+                            elements[nr][nullCol] = elements[nr - 1][nullCol];
+                        }
+                        //生成新元素
+                        elements[0][nullCol] = createElement(0, nullCol);
+                    }
+
                 } else {
-                    //if the stack is empty,generate random element to fill the empty element
-                    getRandomElement(i, j);
+                    break;
                 }
             }
-            //clear the stack
-            dropStack.clear();
         }
+
     }
-    public void getRandomElement(int i, int j) {
-        //generate random element
-        int random = (int) (Math.random() * 4);
-        //switch the random number to generate different animal
-        switch (random) {
-            case 0 -> elements[i][j] = new Element(i, j, Images.fox, "fox");
-            case 1 -> elements[i][j] = new Element(i, j, Images.frog, "frog");
-            case 2 -> elements[i][j] = new Element(i, j, Images.bear, "bear");
-            case 3 -> elements[i][j] = new Element(i, j, Images.bird, "bird");
+
+    public Element createElement(int row, int col) {
+        int x = OFFSET + col * ANIMAL_SIZE;    //列col的值控制x坐标
+        int y = OFFSET + row * ANIMAL_SIZE;    //行row的值控制y坐标
+        Random random = new Random();
+        int type = random.nextInt(4);
+        return switch (type) {
+            case ELEMENT_TYPE_BEAR -> new Bear(x, y);
+            case ELEMENT_TYPE_BIRD -> new Bird(x, y);
+            case ELEMENT_TYPE_FOX -> new Fox(x, y);
+            default -> new Frog(x, y);
+        };
+
+    }
+
+    public void fillAllElement() {
+        for (int row = 0; row < ROWS_ELEMENT; row++) {
+            for (int col = 0; col < COLS_ELEMENT; col++) {
+                //判断行消列消
+                do {
+                    Element element = createElement(row, col);
+                    elements[row][col] = element;   //将元素填充到 elements数组中
+                } while (checkEliminate(row, col) != ELIMINATE_NONE);  //若可消则重新生成元素
+
+            }
         }
     }
 }

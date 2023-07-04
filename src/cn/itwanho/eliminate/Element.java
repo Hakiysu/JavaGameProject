@@ -3,7 +3,7 @@ package cn.itwanho.eliminate;
 import javax.swing.*;
 import java.awt.*;
 
-public class Element {
+public abstract class Element {
     //position of the element
     private int x;
     private int y;
@@ -18,14 +18,12 @@ public class Element {
     //name
     private String name;
 
-    public Element(int x, int y, ImageIcon image,String name) {
+    public Element(int x, int y) {
         this.x = x;
         this.y = y;
         this.selected = false;
         this.eliminated = false;
         this.boomAnimeIndexForElement = 0;
-        this.image = image;
-        this.name = name;
     }
 
     public int getCol() {
