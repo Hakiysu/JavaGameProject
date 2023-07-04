@@ -69,7 +69,7 @@ public class MusicPlayer {
         playOnce("assets/music/good.wav");
     }
     public void playGreatMusic() {
-        playOnce("assets/music/bad.wav");
+        playOnce("assets/music/great.wav");
     }
     public void playAmazingMusic() {
         playOnce("assets/music/amazing.wav");

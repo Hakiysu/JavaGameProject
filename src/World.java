@@ -30,7 +30,7 @@ public class World extends JPanel {
     //claim the game element,any elements will be stored in this array
     public Element[][] elements = new Element[ROWS_ELEMENT][COLS_ELEMENT];
     //eliminate stack,size is row_e*col_e
-    public Stack<Element> eliminateStack = new Stack<Element>();
+    public Stack<Element> eliminateStack = new Stack<>();
     private cn.itwanho.eliminate.MusicPlayer MusicPlayer;
 
     public static void main(String[] args) {
@@ -40,6 +40,7 @@ public class World extends JPanel {
         world.setFocusable(true);// 将控件设置成可获取焦点状态
         frame.add(world);
         //设置用户在此窗体上发起 "close" 时默认执行的操作，EXIT_ON_CLOSE：使用 System exit 方法退出应用程序
+        frame.setTitle("开心消消乐小游戏");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT + 17);//17是窗口标题栏的高度
         frame.setLocationRelativeTo(null);//使窗口显示在屏幕中央

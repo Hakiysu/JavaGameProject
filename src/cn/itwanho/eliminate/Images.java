@@ -21,4 +21,14 @@ public class Images {
             bombs[i] = new ImageIcon("assets/img/bom" + (i + 1) + ".png");
         }
     }
+        public static void main(String[] args) {
+            System.out.println(background.getImageLoadStatus());    //返回8表示成功
+            System.out.println(bird.getImageLoadStatus());    //返回8表示成功
+            System.out.println(frog.getImageLoadStatus());    //返回8表示成功
+            System.out.println(fox.getImageLoadStatus());    //返回8表示成功
+            System.out.println(bear.getImageLoadStatus());    //返回8表示成功
+            for (ImageIcon bomb : bombs) {
+                System.out.println(bomb.getImageLoadStatus());
+            }
+        }
 }

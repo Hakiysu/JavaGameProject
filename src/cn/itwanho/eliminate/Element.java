@@ -1,6 +1,7 @@
 package cn.itwanho.eliminate;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Element {
     //position of the element
@@ -10,9 +11,7 @@ public class Element {
     private boolean selected;
     //can this element be eliminated
     private boolean eliminated;
-    //boom anime for the element
-    //anime is 4 pictures,save in a array
-    //start from 0,then play 1,2,3,then stop
+    //爆炸图片计数
     private int boomAnimeIndexForElement;
     //image
     private ImageIcon image;
@@ -51,6 +50,22 @@ public class Element {
 
     public void setImage(ImageIcon bomb) {
         this.image = bomb;
+    }
+    public void paintElement(Graphics g) {
+        if (isSelected()) {
+            g.setColor(Color.GREEN);
+            //g.fillRect(x, y, World.ANIMAL_SIZE, World.ANIMAL_SIZE);
+            this.getImage().paintIcon(null, g, this.x, this.y);
+
+        } else if (isEliminated()) {
+            //若没到最后一张爆炸图
+            if (boomAnimeIndexForElement < Images.bombs.length) {
+                Images.bombs[boomAnimeIndexForElement++].paintIcon(null, g, x, y);
+            }
+
+        } else {
+            this.getImage().paintIcon(null, g, this.x, this.y);
+        }
     }
 
     public boolean isEliminated() {
