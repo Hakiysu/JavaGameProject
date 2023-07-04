@@ -328,7 +328,9 @@ public class World extends JPanel {
             }
         }
         MusicPlayer mmp = new MusicPlayer();
-        mmp.playGoodMusic();
+        Random random = new Random(1);
+        short i = (short) random.nextInt(3);
+        mmp.playScoreSound(i);
         return haveEliminated;
     }
 

@@ -65,30 +65,29 @@ public class MusicPlayer {
     public void playDropMusic() {
         playOnce("assets/music/drop.wav");
     }
-    public void playGoodMusic() {
+
+    private void playGoodMusic() {
         playOnce("assets/music/good.wav");
     }
-    public void playGreatMusic() {
+
+    private void playGreatMusic() {
         playOnce("assets/music/great.wav");
     }
 
-    public void playAmazingMusic() {
+    private void playAmazingMusic() {
         playOnce("assets/music/amazing.wav");
     }
 
-    public void playExcellentMusic() {
+    private void playExcellentMusic() {
         playOnce("assets/music/excellent.wav");
     }
 
-    public void playUnbelievableMusic() {
+    private void playUnbelievableMusic() {
         playOnce("assets/music/unbelievable.wav");
     }
 
     public void playScoreSound(short score) {
         switch (score) {
-            case 1:
-                playGoodMusic();
-                break;
             case 2:
                 playGreatMusic();
                 break;
@@ -102,6 +101,7 @@ public class MusicPlayer {
                 playUnbelievableMusic();
                 break;
             default:
+                playGoodMusic();
                 break;
         }
     }
