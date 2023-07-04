@@ -139,8 +139,8 @@ public class World extends JPanel {
     //print the game window
     public void paint(Graphics g) {
         Images.background.paintIcon(null, g, 0, 0);
-        for (int y = 0; y < COLS_ELEMENT; y++) {
-            for (int x = 0; x < ROWS_ELEMENT; x++) {
+        for (int y = 0; y < ROWS; y++) {
+            for (int x = 0; x < COLS; x++) {
                 Element element = elements[x][y];
                 if (element != null) {
                     element.paintElement(g);
@@ -207,8 +207,8 @@ public class World extends JPanel {
     }
 
     public Element createElement(int row, int col) {
-        int x = OFFSET + col * ANIMAL_SIZE;    //列col的值控制x坐标
-        int y = OFFSET + row * ANIMAL_SIZE;    //行row的值控制y坐标
+        int x = OFFSET + row * ANIMAL_SIZE;    //列col的值控制x坐标
+        int y = OFFSET + col * ANIMAL_SIZE;    //行row的值控制y坐标
         Random random = new Random();
         int type = random.nextInt(4);
         return switch (type) {
@@ -220,8 +220,8 @@ public class World extends JPanel {
     }
 
     public void fillAllElement() {
-        for (int y = 0; y < COLS_ELEMENT; y++) {
-            for (int x = 0; x < ROWS_ELEMENT; x++) {
+        for (int y = 0; y < ROWS; y++) {
+            for (int x = 0; x < COLS; x++) {
                 //判断行消列消
                 do {
                     Element element = createElement(x, y);
@@ -368,7 +368,6 @@ public class World extends JPanel {
             //只要有null 元素就将它上面的元素落下
             while (true) {
                 int[] nullCols = {};    //当前行为null的列号
-
                 for (int col = COLS - 1; col >= 0; col--) {
                     Element element = elements[row][col];
                     if (element == null) {

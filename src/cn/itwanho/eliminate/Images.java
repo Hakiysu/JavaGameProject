@@ -22,11 +22,11 @@ public class Images {
         }
     }
         public static void main(String[] args) {
-            System.out.println(background.getImageLoadStatus());    //返回8表示成功
-            System.out.println(bird.getImageLoadStatus());    //返回8表示成功
-            System.out.println(frog.getImageLoadStatus());    //返回8表示成功
-            System.out.println(fox.getImageLoadStatus());    //返回8表示成功
-            System.out.println(bear.getImageLoadStatus());    //返回8表示成功
+            System.out.println(background.getImageLoadStatus());
+            System.out.println(bird.getImageLoadStatus());
+            System.out.println(frog.getImageLoadStatus());
+            System.out.println(fox.getImageLoadStatus());
+            System.out.println(bear.getImageLoadStatus());
             for (ImageIcon bomb : bombs) {
                 System.out.println(bomb.getImageLoadStatus());
             }
