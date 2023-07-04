@@ -73,9 +73,11 @@ public abstract class Element {
     public void setSelected(boolean b) {
         this.selected = b;
     }
-    public String getName(){
+
+    public String getName() {
         return name;
     }
+
     public void paintElement(Graphics g) {
         if (isSelected()) {
             g.setColor(Color.GREEN);
@@ -85,11 +87,13 @@ public abstract class Element {
             //若没到最后一张爆炸图
             if (boomAnimeIndexForElement < Images.bombs.length) {
                 Images.bombs[boomAnimeIndexForElement++].paintIcon(null, g, x, y);
-            } else {
-                MusicPlayer mmp = new MusicPlayer();//multiple music player instances
-                mmp.playEliminateMusic();
+                //若到了最后一张爆炸图,播放音乐
+                if (boomAnimeIndexForElement == Images.bombs.length) {
+                    MusicPlayer mmp = new MusicPlayer();//multiple music player instances
+                    mmp.playEliminateMusic();
+                    System.out.println("BOOM!");
+                }
             }
-
         } else {
             this.getImage().paintIcon(null, g, this.x, this.y);
         }

@@ -60,7 +60,7 @@ public class MusicPlayer {
         playOnce("assets/music/swap.wav");
     }
     public void playEliminateMusic() {
-        playOnce("assets/music/eliminate.wav");
+        playOnce("assets/music/boom.wav");
     }
     public void playDropMusic() {
         playOnce("assets/music/drop.wav");
