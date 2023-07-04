@@ -91,7 +91,6 @@ public abstract class Element {
                 if (boomAnimeIndexForElement == Images.bombs.length) {
                     MusicPlayer mmp = new MusicPlayer();//multiple music player instances
                     mmp.playEliminateMusic();
-                    System.out.println("BOOM!");
                 }
             }
         } else {

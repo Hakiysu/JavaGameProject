@@ -60,7 +60,7 @@ public class MusicPlayer {
         playOnce("assets/music/swap.wav");
     }
     public void playEliminateMusic() {
-        playOnce("assets/music/boom.wav");
+        playOnce("assets/music/eliminate.wav");
     }
     public void playDropMusic() {
         playOnce("assets/music/drop.wav");
@@ -88,6 +88,9 @@ public class MusicPlayer {
 
     public void playScoreSound(short score) {
         switch (score) {
+            case 1:
+                playGoodMusic();
+                break;
             case 2:
                 playGreatMusic();
                 break;
@@ -97,11 +100,8 @@ public class MusicPlayer {
             case 4:
                 playExcellentMusic();
                 break;
-            case 5:
-                playUnbelievableMusic();
-                break;
             default:
-                playGoodMusic();
+                playUnbelievableMusic();
                 break;
         }
     }
