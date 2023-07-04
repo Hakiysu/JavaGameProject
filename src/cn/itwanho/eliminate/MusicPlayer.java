@@ -71,14 +71,39 @@ public class MusicPlayer {
     public void playGreatMusic() {
         playOnce("assets/music/great.wav");
     }
+
     public void playAmazingMusic() {
         playOnce("assets/music/amazing.wav");
     }
+
     public void playExcellentMusic() {
         playOnce("assets/music/excellent.wav");
     }
+
     public void playUnbelievableMusic() {
         playOnce("assets/music/unbelievable.wav");
+    }
+
+    public void playScoreSound(short score) {
+        switch (score) {
+            case 1:
+                playGoodMusic();
+                break;
+            case 2:
+                playGreatMusic();
+                break;
+            case 3:
+                playAmazingMusic();
+                break;
+            case 4:
+                playExcellentMusic();
+                break;
+            case 5:
+                playUnbelievableMusic();
+                break;
+            default:
+                break;
+        }
     }
 }
 
