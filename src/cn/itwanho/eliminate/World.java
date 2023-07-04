@@ -13,11 +13,10 @@ public class World extends JPanel {
     //window size
     public static final int WIDTH = 429;
     public static final int HEIGHT = 570;
-    //game window row and column
-    public static final int ROWS = 8;//game have 8 rows
-    public static final int COLS = 6;//game have 6 columns
-    //each row have 6 elements
-    //each column have 8 elements
+    //一共有8行6列
+    public static final int ROWS = 8;
+    public static final int COLS = 6;
+    //每行6个元素，每列8个元素
     public static final int ROWS_ELEMENT = 6;
     public static final int COLS_ELEMENT = 8;
     //animal size
@@ -122,7 +121,6 @@ public class World extends JPanel {
 
                             }).start();
                         } else {
-
                             elements[firstRow][firstCol].setSelected(false); //取消选中状态
                             elements[secondRow][secondCol].setSelected(false); //取消选中状态
                             canInteractive = true;//可交互
@@ -221,12 +219,11 @@ public class World extends JPanel {
             case ELEMENT_TYPE_FOX -> new Fox(x, y);
             default -> new Frog(x, y);
         };
-
     }
 
     public void fillAllElement() {
-        for (int row = 0; row < ROWS_ELEMENT; row++) {
-            for (int col = 0; col < COLS_ELEMENT; col++) {
+        for (int col = 0; col < COLS_ELEMENT; col++) {
+            for (int row = 0; row < ROWS_ELEMENT; row++) {
                 //判断行消列消
                 do {
                     Element element = createElement(row, col);
@@ -387,8 +384,7 @@ public class World extends JPanel {
                     //移动下落元素
                     for (int count = 0; count < 15; count++) {
                         // 向下落一下
-                        for (int i = 0; i < nullCols.length; i++) {
-                            int nullCol = nullCols[i];
+                        for (int nullCol : nullCols) {
                             for (int dr = row - 1; dr >= 0; dr--) {
                                 Element element = elements[dr][nullCol];
                                 if (element != null) {
@@ -407,8 +403,7 @@ public class World extends JPanel {
                     }
 
                     //真正让数组上面的元素向下移动
-                    for (int i = 0; i < nullCols.length; i++) {
-                        int nullCol = nullCols[i];
+                    for (int nullCol : nullCols) {
                         for (int nr = row; nr > 0; nr--) {
                             elements[nr][nullCol] = elements[nr - 1][nullCol];
                         }

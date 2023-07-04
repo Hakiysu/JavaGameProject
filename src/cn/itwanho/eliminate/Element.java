@@ -73,10 +73,6 @@ public abstract class Element {
     public void setSelected(boolean b) {
         this.selected = b;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
     public String getName(){
         return name;
     }

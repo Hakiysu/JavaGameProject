@@ -8,6 +8,7 @@ public class Bear extends Element {
         super(x, y);
     }
 
+    @Override
     public ImageIcon getImage() {
         return Images.bear;
     }

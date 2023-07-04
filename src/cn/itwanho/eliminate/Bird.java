@@ -8,6 +8,7 @@ public class Bird extends Element {
         super(x, y);
     }
 
+    @Override
     public ImageIcon getImage() {
         return Images.bird;
     }
