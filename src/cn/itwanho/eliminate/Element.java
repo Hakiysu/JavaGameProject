@@ -26,19 +26,19 @@ public abstract class Element {
         this.boomAnimeIndexForElement = 0;
     }
 
-    public int getCol() {
+    public int getX() {
         return x;
     }
 
-    public void setCol(int i) {
+    public void setX(int i) {
         this.x = i;
     }
 
-    public int getRow() {
+    public int getY() {
         return y;
     }
 
-    public void setRow(int i) {
+    public void setY(int i) {
         this.y = i;
     }
 
@@ -49,25 +49,13 @@ public abstract class Element {
     public void setImage(ImageIcon bomb) {
         this.image = bomb;
     }
-    public void paintElement(Graphics g) {
-        if (isSelected()) {
-            g.setColor(Color.GREEN);
-            //g.fillRect(x, y, World.ANIMAL_SIZE, World.ANIMAL_SIZE);
-            this.getImage().paintIcon(null, g, this.x, this.y);
 
-        } else if (isEliminated()) {
-            //若没到最后一张爆炸图
-            if (boomAnimeIndexForElement < Images.bombs.length) {
-                Images.bombs[boomAnimeIndexForElement++].paintIcon(null, g, x, y);
-            }
-
-        } else {
-            this.getImage().paintIcon(null, g, this.x, this.y);
-        }
+    public boolean getEliminated() {
+        return eliminated;
     }
 
-    public boolean isEliminated() {
-        return eliminated;
+    public void setEliminated(boolean eliminated) {
+        this.eliminated = eliminated;
     }
 
     public int getBoomAnimeIndexForElement() {
@@ -91,5 +79,21 @@ public abstract class Element {
     }
     public String getName(){
         return name;
+    }
+    public void paintElement(Graphics g) {
+        if (isSelected()) {
+            g.setColor(Color.GREEN);
+            g.fillRect(x, y, World.ANIMAL_SIZE, World.ANIMAL_SIZE);
+            this.getImage().paintIcon(null, g, this.x, this.y);
+
+        } else if (getEliminated()) {
+            //若没到最后一张爆炸图
+            if (boomAnimeIndexForElement < Images.bombs.length) {
+                Images.bombs[boomAnimeIndexForElement++].paintIcon(null, g, x, y);
+            }
+
+        } else {
+            this.getImage().paintIcon(null, g, this.x, this.y);
+        }
     }
 }
