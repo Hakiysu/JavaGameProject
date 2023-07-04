@@ -6,7 +6,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.Stack;
 
 //window class
 public class World extends JPanel {
@@ -16,30 +15,21 @@ public class World extends JPanel {
     //一共有8行6列
     public static final int ROWS = 8;
     public static final int COLS = 6;
-    //每行6个元素，每列8个元素
-    public static final int ROWS_ELEMENT = 6;
-    public static final int COLS_ELEMENT = 8;
     //animal size
     public static final int ANIMAL_SIZE = 60;
     //offset of game window
     public static final int OFFSET = 30;
-    public static final int ELEMENT_TYPE_BEAR = 0;  //熊
-    public static final int ELEMENT_TYPE_BIRD = 1;  //鸟
-    public static final int ELEMENT_TYPE_FOX = 2;  //狐狸
-    public static final int ELEMENT_TYPE_FROG = 3;  //青蛙
     public static final int ELIMINATE_NONE = 0; //元素不可消
     public static final int ELIMINATE_ROW = 1; //元素行可消
     public static final int ELIMINATE_COL = 2; //元素列可消
-    public Element[][] elements = new Element[ROWS_ELEMENT][COLS_ELEMENT];
-    public Stack<Element> eliminateStack = new Stack<>();
+    public Element[][] elements = new Element[ROWS][COLS];
     private cn.itwanho.eliminate.MusicPlayer MusicPlayer;
     private int firstRow = 0; //第一个选中的元素的ROW
     private int firstCol = 0; //第一个选中的元素的COL
     private int secondRow = 0; //第二个选中的元素的ROW
     private int secondCol = 0; //第二个选中的元素的COL
-    private boolean canInteractive = true; //是否可以交互
     private int selectedNumber = 0; //选中的元素个数
-    private boolean selected; //是否选中
+    private boolean canInteractive = true; //是否可以交互
 
 
     public static void main(String[] args) {
@@ -61,102 +51,78 @@ public class World extends JPanel {
 
     private void startGameLoop() {
         fillAllElement();
-        new Thread(() -> {
-            //get mouse click event
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    //if can't interactive,return
-                    if (!canInteractive) {
-                        return;
-                    }
-                    //if mouse click position is out of game window,return
-                    if (e.getX() < OFFSET || e.getX() > OFFSET + COLS * ANIMAL_SIZE || e.getY() < OFFSET || e.getY() > OFFSET + ROWS * ANIMAL_SIZE) {
-                        return;
-                    }
-                    //get mouse click position in array
-                    canInteractive = false;
-                    int[] position = getMouseClickPositionInArray(e);
-                    selectedNumber++;
-                    if (selectedNumber == 1) {
-                        firstRow = position[0];
-                        firstCol = position[1];
-                        elements[firstRow][firstCol].setSelected(true);
-                        canInteractive = true;
-                    } else if (selectedNumber == 2) {
-                        secondRow = position[0];
-                        secondCol = position[1];
-                        elements[secondRow][secondCol].setSelected(true);
-                        canInteractive = true;
-                        //if two elements are adjacent
-                        if (checkAdjacent()) {
-                            //if two elements can be eliminated
-                            new Thread(() -> {
-                                elements[firstRow][firstCol].setSelected(false); //取消选中状态
-                                elements[secondRow][secondCol].setSelected(false); //取消选中状态
-                                //移动、交换、消除
-                                moveElement();      //移动两个元素
-                                swapElements();  //交换两个元素
-                                if (eliminateElement()) { //若有可消元素，并消除
-                                    //下落元素
-                                    do {
-                                        dropElement();
-                                        try {
-                                            Thread.sleep(10);
-                                        } catch (InterruptedException ex) {
-                                            ex.printStackTrace();
-                                        }
-                                    } while (eliminateElement());    //持续扫描
-
-                                } else {
-                                    //交换回去
-                                    moveElement();      //移动两个元素
-                                    swapElements();  //交换两个元素
-                                }
-
-                                canInteractive = true;  //可交互
-
-
-                            }).start();
-                        } else {
+        //get mouse click event
+        MouseAdapter mouseAdapter = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                //if can't interactive,return
+                if (!canInteractive) {
+                    return;
+                }
+                //if mouse click position is out of game window,return
+                if (e.getX() < OFFSET || e.getX() > OFFSET + COLS * ANIMAL_SIZE || e.getY() < OFFSET || e.getY() > OFFSET + ROWS * ANIMAL_SIZE) {
+                    return;
+                }
+                //get mouse click position in array
+                canInteractive = false;
+                int[] position = getMouseClickPositionInArray(e);
+                selectedNumber++;
+                if (selectedNumber == 1) {
+                    firstRow = position[0];
+                    firstCol = position[1];
+                    elements[firstRow][firstCol].setSelected(true);
+                    canInteractive = true;
+                } else if (selectedNumber == 2) {
+                    secondRow = position[0];
+                    secondCol = position[1];
+                    elements[secondRow][secondCol].setSelected(true);
+                    //if two elements are adjacent
+                    if (checkAdjacent()) {
+                        //if two elements can be eliminated
+                        new Thread(() -> {
                             elements[firstRow][firstCol].setSelected(false); //取消选中状态
                             elements[secondRow][secondCol].setSelected(false); //取消选中状态
-                            canInteractive = true;//可交互
-                        }
-                        canInteractive = true;//在某种条件下可交互
-                        selectedNumber = 0; //选中个数归零
+                            //移动、交换、消除
+                            moveElement();      //移动两个元素
+                            swapElements();  //交换两个元素
+                            if (eliminateElement()) { //若有可消元素，并消除
+                                //下落元素
+                                do {
+                                    dropElement();
+                                    try {
+                                        Thread.sleep(10);
+                                    } catch (InterruptedException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                } while (eliminateElement());    //持续扫描
+
+                            } else {
+                                //交换回去
+                                moveElement();      //移动两个元素
+                                swapElements();  //交换两个元素
+                            }
+                            canInteractive = true;  //可交互
+                        }).start();
+                    } else {
+                        elements[firstRow][firstCol].setSelected(false); //取消选中状态
+                        elements[secondRow][secondCol].setSelected(false); //取消选中状态
+                        canInteractive = true;//可交互
                     }
-                    repaint();
+                    canInteractive = true;//在某种条件下可交互
+                    selectedNumber = 0; //选中个数归零
                 }
-            });
-        }).start();
-
-    }
-
-
-
-
-    //print the game window
-    public void paint(Graphics g) {
-        Images.background.paintIcon(null, g, 0, 0);
-        for (int y = 0; y < ROWS; y++) {
-            for (int x = 0; x < COLS; x++) {
-                Element element = elements[x][y];
-                if (element != null) {
-                    element.paintElement(g);
-                }
+                repaint();
             }
-        }
+        };
+        this.addMouseListener(mouseAdapter);
     }
-    private boolean isSelected() {
-        return selected;
-    }
+
 
     //get position by listening mouse click event,then return the position:x,y
     public int[] getMouseClickPositionInArray(MouseEvent e) {
         int[] position = new int[2];
-        position[0] = (e.getX() - OFFSET) / ANIMAL_SIZE;
-        position[1] = (e.getY() - OFFSET) / ANIMAL_SIZE;
+        position[1] = (e.getX() - OFFSET) / ANIMAL_SIZE;
+        position[0] = (e.getY() - OFFSET) / ANIMAL_SIZE;
         //show choose anime
         return position;
     }
@@ -165,7 +131,7 @@ public class World extends JPanel {
     //Process:check if two elements are adjacent
     //Output:boolean,if two elements are adjacent,return true,else return false
     public boolean checkAdjacent() {
-        return (Math.abs(firstRow - secondRow) == 1 && firstCol == secondCol) || (Math.abs(firstCol - secondCol) == 1 && firstRow == secondRow);
+        return (Math.abs(firstRow - secondRow) == 1 && firstCol == secondCol) || (Math.abs(firstCol - secondCol) == 1 && firstRow == secondRow);    //相邻
     }
 
     //交换元素
@@ -177,26 +143,28 @@ public class World extends JPanel {
     }
 
     //检查消除
-    public int checkEliminate(int x, int y) {
-        Element element = elements[x][y];   //获取当前元素
+    public int checkEliminate(int row, int col) {
+        Element element = elements[row][col];   //获取当前元素
         //判断纵向
-        if (x >= 2) {
-            Element element1 = elements[x - 1][y];  //获取当前元素上面第1个元素
-            Element element2 = elements[x - 2][y];  //获取当前元素上面第2个元素
+        if (row >= 2) {
+            Element element1 = elements[row - 1][col];  //获取当前元素上面第1个元素
+            Element element2 = elements[row - 2][col];  //获取当前元素上面第2个元素
             if (element1 != null && element2 != null && element != null) {
                 //若元素都不为null
                 if (element.getClass().equals(element1.getClass()) && element.getClass().equals(element2.getClass())) {
+                    System.out.println(ELIMINATE_COL);
                     return ELIMINATE_COL; //表示列可消除
                 }
             }
         }
 
         //判断横向
-        if (y >= 2) {
-            Element element1 = elements[x][y - 1];  //获取当前元素前面第1个元素
-            Element element2 = elements[x][y - 2];  //获取当前元素前面第2个元素
+        if (col >= 2) {
+            Element element1 = elements[row][col - 1];  //获取当前元素前面第1个元素
+            Element element2 = elements[row][col - 2];  //获取当前元素前面第2个元素
             if (element1 != null && element2 != null && element != null) {
                 //若元素都不为null
+                System.out.println(ELIMINATE_ROW);
                 if (element.getClass().equals(element1.getClass()) && element.getClass().equals(element2.getClass())) {
                     return ELIMINATE_ROW; //表示行可消除
                 }
@@ -207,21 +175,22 @@ public class World extends JPanel {
     }
 
     public Element createElement(int row, int col) {
-        int x = OFFSET + row * ANIMAL_SIZE;    //列col的值控制x坐标
-        int y = OFFSET + col * ANIMAL_SIZE;    //行row的值控制y坐标
-        Random random = new Random();
+        int x = OFFSET + col * ANIMAL_SIZE;    //列col的值控制x坐标
+        int y = OFFSET + row * ANIMAL_SIZE;    //行row的值控制y坐标
+        Random random = new Random();//随机数,0~3
         int type = random.nextInt(4);
         return switch (type) {
-            case ELEMENT_TYPE_BEAR -> new Bear(x, y);
-            case ELEMENT_TYPE_BIRD -> new Bird(x, y);
-            case ELEMENT_TYPE_FOX -> new Fox(x, y);
+            case 0 -> new Bear(x, y);
+            case 1 -> new Bird(x, y);
+            case 2 -> new Fox(x, y);
             default -> new Frog(x, y);
         };
+
     }
 
     public void fillAllElement() {
-        for (int y = 0; y < ROWS; y++) {
-            for (int x = 0; x < COLS; x++) {
+        for (int x = 0; x < ROWS; x++) {
+            for (int y = 0; y < COLS; y++) {
                 //判断行消列消
                 do {
                     Element element = createElement(x, y);
@@ -243,13 +212,11 @@ public class World extends JPanel {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
                 firstX += step;
                 secondX -= step;
                 //修改元素坐标
                 elements[firstRow][firstCol].setX(firstX);
                 elements[secondRow][secondCol].setX(secondX);
-
                 repaint();
             }
 
@@ -265,13 +232,11 @@ public class World extends JPanel {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
                 firstY += step;
                 secondY -= step;
                 //修改元素坐标
                 elements[firstRow][firstCol].setY(firstY);
                 elements[secondRow][secondCol].setY(secondY);
-
                 repaint();
             }
         }
@@ -279,8 +244,8 @@ public class World extends JPanel {
 
     private boolean eliminateElement() {
         boolean haveEliminated = false;
-        for (int row = ROWS_ELEMENT - 1; row >= 0; row--) {
-            for (int col = COLS_ELEMENT - 1; col >= 0; col--) {
+        for (int row = ROWS - 1; row >= 0; row--) {
+            for (int col = COLS - 1; col >= 0; col--) {
                 Element element = elements[row][col];
                 if (element == null) {   //若元素为null 则跳过
                     continue;
@@ -375,7 +340,6 @@ public class World extends JPanel {
                         nullCols[nullCols.length - 1] = col;
                     }
                 }
-
                 //查找null 列
                 if (nullCols.length > 0) {
                     //移动下落元素
@@ -389,8 +353,6 @@ public class World extends JPanel {
                                 }
                             }
                         }
-
-
                         try {
                             Thread.sleep(10);
                         } catch (InterruptedException e) {
@@ -398,21 +360,33 @@ public class World extends JPanel {
                         }
                         repaint();
                     }
-
                     //真正让数组上面的元素向下移动
-                    for (int nullCol : nullCols) {
+                    for (int i = 0; i < nullCols.length; i++) {
+                        int nullCol = nullCols[i];
                         for (int nr = row; nr > 0; nr--) {
                             elements[nr][nullCol] = elements[nr - 1][nullCol];
                         }
                         //生成新元素
                         elements[0][nullCol] = createElement(0, nullCol);
                     }
-
                 } else {
                     break;
                 }
             }
         }
 
+    }
+
+    //print the game window
+    public void paint(Graphics g) {
+        Images.background.paintIcon(null, g, 0, 0);
+        for (int x = 0; x < ROWS; x++) {
+            for (int y = 0; y < COLS; y++) {
+                Element element = elements[x][y];
+                if (element != null) {
+                    element.paintElement(g);
+                }
+            }
+        }
     }
 }
