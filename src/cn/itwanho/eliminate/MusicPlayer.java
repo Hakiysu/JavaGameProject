@@ -86,7 +86,8 @@ public class MusicPlayer {
         playOnce("assets/music/unbelievable.wav");
     }
 
-    public void playScoreSound(short score) {
+    public void playScoreSound(int score) {
+        System.out.println("score: " + score);
         switch (score) {
             case 1:
                 playGoodMusic();

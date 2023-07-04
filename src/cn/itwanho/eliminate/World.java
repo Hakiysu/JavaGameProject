@@ -30,7 +30,7 @@ public class World extends JPanel {
     private int secondCol = 0; //第二个选中的元素的COL
     private int selectedNumber = 0; //选中的元素个数
     private boolean canInteractive = true; //是否可以交互
-
+    private int combo = 0; //连击数
 
     public static void main(String[] args) {
         JFrame frame = new JFrame();
@@ -51,10 +51,12 @@ public class World extends JPanel {
 
     private void startGameLoop() {
         fillAllElement();
+        repaint();//repaint for init game window
         //get mouse click event
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                System.out.println("上一次连击数："+combo);
                 //if can't interactive,return
                 if (!canInteractive) {
                     return;
@@ -89,13 +91,13 @@ public class World extends JPanel {
                                 //下落元素
                                 do {
                                     dropElement();
+
                                     try {
                                         Thread.sleep(10);
                                     } catch (InterruptedException ex) {
                                         ex.printStackTrace();
                                     }
                                 } while (eliminateElement());    //持续扫描
-
                             } else {
                                 //交换回去
                                 moveElement();      //移动两个元素
@@ -117,9 +119,9 @@ public class World extends JPanel {
         this.addMouseListener(mouseAdapter);
     }
 
-
     //get position by listening mouse click event,then return the position:x,y
     public int[] getMouseClickPositionInArray(MouseEvent e) {
+        combo = 0;
         int[] position = new int[2];
         position[1] = (e.getX() - OFFSET) / ANIMAL_SIZE;
         position[0] = (e.getY() - OFFSET) / ANIMAL_SIZE;
@@ -154,7 +156,6 @@ public class World extends JPanel {
             if (element1 != null && element2 != null && element != null) {
                 //若元素都不为null
                 if (element.getClass().equals(element1.getClass()) && element.getClass().equals(element2.getClass())) {
-                    System.out.println(ELIMINATE_COL);
                     return ELIMINATE_COL; //表示列可消除
                 }
             }
@@ -166,7 +167,6 @@ public class World extends JPanel {
             Element element2 = elements[row][col - 2];  //获取当前元素前面第2个元素
             if (element1 != null && element2 != null && element != null) {
                 //若元素都不为null
-                System.out.println(ELIMINATE_ROW);
                 if (element.getClass().equals(element1.getClass()) && element.getClass().equals(element2.getClass())) {
                     return ELIMINATE_ROW; //表示行可消除
                 }
@@ -316,6 +316,9 @@ public class World extends JPanel {
                         elements[row][col - i] = null;   //行不变,列前元素设置为null
                     }
                     haveEliminated = true;  //有可消元素被消除
+                    combo++;
+                    System.out.println("连击数："+combo+"@"+new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()));
+                    comboControl();
                 }
                 if (rowRepeat >= 2) {
                     elements[row][col] = null; //设置当前元素null
@@ -324,6 +327,9 @@ public class World extends JPanel {
                         elements[row - i][col] = null;   //列不变,行前元素设置为null
                     }
                     haveEliminated = true;  //有可消元素被消除
+                    combo++;
+                    System.out.println("连击数："+combo+"@"+new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()));
+                    comboControl();
                 }
             }
         }
@@ -382,9 +388,14 @@ public class World extends JPanel {
                 }
             }
         }
-
+        repaint();
     }
 
+    //combo control
+    public void comboControl() {
+        MusicPlayer mmp = new MusicPlayer();
+        mmp.playScoreSound(combo);
+    }
     //print the game window
     public void paint(Graphics g) {
         Images.background.paintIcon(null, g, 0, 0);
