@@ -89,6 +89,8 @@ public class MusicPlayer {
     public void playScoreSound(int score) {
         System.out.println("score: " + score);
         switch (score) {
+            case 0:
+                break;
             case 1:
                 playGoodMusic();
                 break;

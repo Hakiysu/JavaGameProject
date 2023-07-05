@@ -392,9 +392,10 @@ public class World extends JPanel {
     }
 
     //combo control
+    int num = 0;
     public void comboControl() {
         MusicPlayer mmp = new MusicPlayer();
-        mmp.playScoreSound(combo);
+        mmp.playScoreSound(num);
     }
     //print the game window
     public void paint(Graphics g) {
