@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class MusicPlayer {
     private Clip clip;
-
+    //循环播放
     private void playMusic(String filePath) {
         try {
             File audioFile = new File(filePath);
@@ -21,7 +21,8 @@ public class MusicPlayer {
             e.printStackTrace();
         }
     }
-    //this func plays music only once
+
+    //只播放一次
     private void playOnce(String filePath){
                 try {
             File audioFile = new File(filePath);

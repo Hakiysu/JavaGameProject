@@ -77,8 +77,9 @@ public abstract class Element {
     public String getName() {
         return name;
     }
-
+    //绘制元素图片
     public void paintElement(Graphics g) {
+        //选中状态
         if (isSelected()) {
             g.setColor(Color.GREEN);
             g.fillRect(x, y, World.ANIMAL_SIZE, World.ANIMAL_SIZE);
