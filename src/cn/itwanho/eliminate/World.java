@@ -373,8 +373,7 @@ public class World extends JPanel {
                         repaint();
                     }
                     //真正让数组上面的元素向下移动
-                    for (int i = 0; i < nullCols.length; i++) {
-                        int nullCol = nullCols[i];
+                    for (int nullCol : nullCols) {
                         for (int nr = row; nr > 0; nr--) {
                             elements[nr][nullCol] = elements[nr - 1][nullCol];
                         }
