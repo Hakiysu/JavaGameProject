@@ -15,8 +15,6 @@ public abstract class Element {
     private int boomAnimeIndexForElement;
     //image
     private ImageIcon image;
-    //name
-    private String name;
 
     public Element(int x, int y) {
         this.x = x;
@@ -46,10 +44,6 @@ public abstract class Element {
         return image;
     }
 
-    public void setImage(ImageIcon bomb) {
-        this.image = bomb;
-    }
-
     public boolean getEliminated() {
         return eliminated;
     }
@@ -58,15 +52,7 @@ public abstract class Element {
         this.eliminated = eliminated;
     }
 
-    public int getBoomAnimeIndexForElement() {
-        return boomAnimeIndexForElement;
-    }
-
-    public void setBoomAnimeIndexForElement(int i) {
-        this.boomAnimeIndexForElement = i;
-    }
-
-    public boolean isSelected() {
+    public boolean getSelected() {
         return selected;
     }
 
@@ -74,20 +60,17 @@ public abstract class Element {
         this.selected = b;
     }
 
-    public String getName() {
-        return name;
-    }
     //绘制元素图片
     public void paintElement(Graphics g) {
         //选中状态
-        if (isSelected()) {
+        if (getSelected()) {//如果元素状态为选中，打印绿色方块背景
             g.setColor(Color.GREEN);
-            g.fillRect(x, y, World.ANIMAL_SIZE, World.ANIMAL_SIZE);
-            this.getImage().paintIcon(null, g, this.x, this.y);
-        } else if (getEliminated()) {
+            g.fillRect(x, y, World.ANIMAL_SIZE, World.ANIMAL_SIZE);//先画绿色背景
+            this.getImage().paintIcon(null, g, this.x, this.y);//再画图片
+        } else if (getEliminated()) {//如果元素状态为消除，打印爆炸图，图片播放完后播放爆炸音乐
             //若没到最后一张爆炸图
             if (boomAnimeIndexForElement < Images.bombs.length) {
-                Images.bombs[boomAnimeIndexForElement++].paintIcon(null, g, x, y);
+                Images.bombs[boomAnimeIndexForElement++].paintIcon(null, g, x, y);//打印爆炸图
                 //若到了最后一张爆炸图,播放音乐
                 if (boomAnimeIndexForElement == Images.bombs.length) {
                     MusicPlayer mmp = new MusicPlayer();//multiple music player instances
@@ -95,6 +78,7 @@ public abstract class Element {
                 }
             }
         } else {
+            //既不是选中状态，也不是消除状态，打印图片就行
             this.getImage().paintIcon(null, g, this.x, this.y);
         }
     }
